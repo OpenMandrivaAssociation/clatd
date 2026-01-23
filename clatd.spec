@@ -50,7 +50,8 @@ install -p -D -m0644 scripts/%{name}.systemd %{buildroot}%{_unitdir}/%{name}.ser
 
 %files
 %doc README.pod
-%license LICENCE # Upstream spelled LICENSE incorrectly, build will fail if they fix this
+#Upstream spelled LICENSE incorrectly, build will fail if they fix this
+%license LICENCE
 %config(noreplace) %{_sysconfdir}/%{name}.conf
 %{_prefix}/sbin/%{name}
 %{_prefix}/lib/NetworkManager/dispatcher.d/50-clatd
