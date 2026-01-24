@@ -2,7 +2,7 @@
 
 Name:           clatd
 Version:        2.1.0
-Release:        5
+Release:        6
 Source0:        https://github.com/toreanderson/clatd/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Summary:        A 464XLAT CLAT implementation for Linux
 URL:            https://github.com/toreanderson/clatd
