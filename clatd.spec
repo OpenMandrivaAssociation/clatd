@@ -2,7 +2,7 @@
 
 Name:		clatd
 Version:	2.1.0
-Release:	2
+Release:	3
 Source0:	https://github.com/toreanderson/clatd/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Summary:	A 464XLAT CLAT implementation for Linux
 URL:		https://github.com/toreanderson/clatd
@@ -43,7 +43,7 @@ mkdir -p %{buildroot}%{_prefix}/lib/NetworkManager/dispatcher.d
 
 %make_install
 install -p -D -m0644 %{name}.conf %{buildroot}%{_sysconfdir}/%{name}.conf
-install -p -D -m0644 scripts/%{name}.systemd %{buildroot}%{_unitdir}/%{name}.service
+install -p -D -m0644 scripts/%{name}.systemd %{buildroot}%{_sysconfdir}/%{name}.service
 
 %post
 %systemd_post %{name}.service
@@ -56,7 +56,7 @@ install -p -D -m0644 scripts/%{name}.systemd %{buildroot}%{_unitdir}/%{name}.ser
 %{_prefix}/sbin/%{name}
 %{_prefix}/lib/NetworkManager/dispatcher.d/50-clatd
 %{_mandir}/man8/*.8*
-%{_unitdir}/%{name}.service
+%{_sysconfdir}/%{name}.service
 
 # Unfortunately, there is no NetworkManager subpackage providing these
 %dir %{_prefix}/lib/NetworkManager
