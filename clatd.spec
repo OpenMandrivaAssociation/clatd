@@ -2,7 +2,7 @@
 
 Name:		clatd
 Version:	2.1.0
-Release:	3
+Release:  4	
 Source0:	https://github.com/toreanderson/clatd/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Summary:	A 464XLAT CLAT implementation for Linux
 URL:		https://github.com/toreanderson/clatd
@@ -23,6 +23,9 @@ Requires:	perl-Net-IP
 Requires:	perl-IPC-Cmd
 Requires:	perl
 Requires:	networkmanager
+Requires(post):  systemd
+Requires(preun):  systemd
+Requires(postun):  systemd
 
 %description
 clatd implements the CLAT component of the 464XLAT network architecture specified in RFC 6877. It allows an IPv6-only host to have IPv4 connectivity that is translated to IPv6 before being routed to an upstream PLAT (which is typically a Stateful NAT64 operated by the ISP) and there translated back to IPv4 before being routed to the IPv4 internet. This is especially useful when local applications on the host requires actual IPv4 connectivity or cannot make use of DNS64 (for example because they use legacy AF_INET socket calls, or if they are simply not using DNS64).
@@ -31,6 +34,7 @@ clatd may also be used to implement an SIIT-DC Edge Relay as described in RFC 77
 
 %prep
 %autosetup -p1
+sed -i 's/sbin/bin/' Makefile
 sed -i 's,(SYSCONFDIR)/NetworkManager,(PREFIX)/lib/NetworkManager,g' Makefile
 sed -i "s,%{_sbindir}/clatd,%{_sbindir}/clatd -c %{_sysconfdir}/%{name}.conf," scripts/*
 
@@ -43,7 +47,7 @@ mkdir -p %{buildroot}%{_prefix}/lib/NetworkManager/dispatcher.d
 
 %make_install
 install -p -D -m0644 %{name}.conf %{buildroot}%{_sysconfdir}/%{name}.conf
-install -p -D -m0644 scripts/%{name}.systemd %{buildroot}%{_sysconfdir}/%{name}.service
+install -p -D -m0644 scripts/%{name}.systemd %{buildroot}%{_unitdir}/%{name}.service
 
 %post
 %systemd_post %{name}.service
@@ -53,10 +57,10 @@ install -p -D -m0644 scripts/%{name}.systemd %{buildroot}%{_sysconfdir}/%{name}.
 #Upstream spelled LICENSE incorrectly, build will fail if they fix this
 %license LICENCE
 %config(noreplace) %{_sysconfdir}/%{name}.conf
-%{_prefix}/sbin/%{name}
+%{_sbindir}/%{name}
 %{_prefix}/lib/NetworkManager/dispatcher.d/50-clatd
 %{_mandir}/man8/*.8*
-%{_sysconfdir}/%{name}.service
+%{_unitdir}/%{name}.service
 
 # Unfortunately, there is no NetworkManager subpackage providing these
 %dir %{_prefix}/lib/NetworkManager
